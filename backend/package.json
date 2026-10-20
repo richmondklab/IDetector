@@ -1,0 +1,29 @@
+{
+  "name": "idetector-backend",
+  "version": "1.0.0",
+  "description": "Passerelle sécurisée entre le frontend iDetector et l'IA (détection d'arnaques Mobile Money en Afrique de l'Ouest)",
+  "main": "server.js",
+  "private": true,
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=18.17"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "start:demo": "node scripts/seed-demo.js --if-empty && node server.js",
+    "dev": "node --watch server.js",
+    "mock": "node scripts/mock-llm.js",
+    "eval": "node scripts/eval-edge-cases.js",
+    "hash-password": "node scripts/hash-password.js",
+    "seed": "node scripts/seed-demo.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "multer": "^2.0.2"
+  }
+}
