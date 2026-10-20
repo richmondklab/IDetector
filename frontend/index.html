@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>iDetector — Détection des arnaques Mobile Money en Afrique de l'Ouest</title>
+  <meta name="description" content="iDetector analyse les SMS et captures d'écran suspects pour détecter les arnaques Mobile Money (Wave, Orange Money, MTN, Moov) en Afrique de l'Ouest.">
+  <meta name="theme-color" content="#0b1f3a">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main" data-i18n="skip">Aller au contenu principal</a>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="#home" aria-label="iDetector">
+      <img class="brand-mark" src="logo.png" alt="" width="44" height="40">
+      <span class="brand-name">i<strong>Detector</strong></span>
+    </a>
+
+    <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mainNav" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="main-nav" id="mainNav" aria-label="Navigation principale">
+      <a href="#home" data-route="home" data-i18n="nav.home">Analyseur</a>
+      <a href="#about" data-route="about" data-i18n="nav.about">À propos</a>
+      <a href="#faq" data-route="faq" data-i18n="nav.faq">FAQ</a>
+      <a href="#contribute" data-route="contribute" data-i18n="nav.contribute">Contribuer</a>
+      <a href="#api" data-route="api" data-i18n="nav.api">API</a>
+      <a href="#privacy" data-route="privacy" data-i18n="nav.privacy">Confidentialité</a>
+      <div class="lang-switch" role="group" aria-label="Langue / Language">
+        <button type="button" class="lang-btn" data-lang="fr" aria-pressed="true">FR</button>
+        <button type="button" class="lang-btn" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <section class="view" id="view-home" data-view="home">
+    <div class="hero">
+      <div class="container hero-inner">
+        <div class="hero-text">
+          <p class="eyebrow" data-i18n="hero.eyebrow">Protection Mobile Money · Afrique de l'Ouest</p>
+          <h1 data-i18n="hero.title">Vérifiez un message avant qu'il ne vous coûte de l'argent.</h1>
+          <p class="lead" data-i18n="hero.lead">Collez un SMS ou importez une capture d'écran : iDetector évalue le niveau de risque, identifie le type d'arnaque et vous indique quoi faire. Compatible avec les arnaques visant Wave, Orange Money, MTN MoMo et Moov Money.</p>
+          <ul class="trust-row">
+            <li data-i18n="hero.t1">Analyse instantanée</li>
+            <li data-i18n="hero.t2">Analyse par l'IA iGuard</li>
+            <li data-i18n="hero.t3">Gratuit et sans inscription</li>
+          </ul>
+        </div>
+        <div class="hero-visual">
+          <img src="logo.png" alt="Logo iDetector : la carte de l'Afrique avec un cadenas" width="400" height="366">
+        </div>
+      </div>
+    </div>
+
+    <div class="container analyzer-grid">
+      <div class="card analyzer-card">
+        <div class="tabs" role="tablist">
+          <button class="tab is-active" role="tab" id="tab-text" aria-selected="true" aria-controls="panel-text" data-i18n="tab.text">Texte du SMS</button>
+          <button class="tab" role="tab" id="tab-image" aria-selected="false" aria-controls="panel-image" data-i18n="tab.image">Capture d'écran</button>
+        </div>
+
+        <div class="tab-panel" id="panel-text" role="tabpanel" aria-labelledby="tab-text">
+          <label for="smsInput" class="field-label" data-i18n="an.label">Message suspect</label>
+          <textarea id="smsInput" rows="8" maxlength="2000" data-i18n-placeholder="an.placeholder" placeholder="Collez ici le SMS ou le message WhatsApp reçu…"></textarea>
+          <div class="field-meta">
+            <span id="charCount">0 / 2000</span>
+            <span class="field-actions">
+              <button type="button" class="link-btn" id="sampleBtn" data-i18n="an.sample">Insérer un exemple</button>
+              <button type="button" class="link-btn" id="clearBtn" data-i18n="an.clear">Effacer</button>
+            </span>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="panel-image" role="tabpanel" aria-labelledby="tab-image" hidden>
+          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Importer une capture d'écran">
+            <input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp" hidden>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 16l4-4 4 4 4-6 4 6"/><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.2"/></svg>
+            <p><strong data-i18n="img.drop">Déposez une capture d'écran ici</strong></p>
+            <p class="muted" data-i18n="img.hint">ou cliquez pour parcourir · PNG, JPG, WebP · 8 Mo max</p>
+          </div>
+          <div class="preview" id="preview" hidden>
+            <img id="previewImg" alt="Aperçu de la capture importée">
+            <button type="button" class="link-btn" id="removeImg" data-i18n="img.remove">Retirer l'image</button>
+          </div>
+          <p class="muted small" id="ocrStatus" role="status" aria-live="polite"></p>
+          <p class="muted small" data-i18n="img.note">Le texte est extrait directement dans votre navigateur (OCR) ; l'image n'est envoyée à aucun serveur, seul le texte extrait est analysé.</p>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-block" id="analyzeBtn" data-i18n="an.analyze">Analyser le message</button>
+      </div>
+
+      <div class="card report-card" id="reportCard" aria-live="polite">
+        <div class="report-empty" id="reportEmpty">
+          <svg width="56" height="56" viewBox="0 0 64 64" fill="none" stroke="#9fb0c8" stroke-width="2.5" stroke-linejoin="round" aria-hidden="true"><path d="M32 8l20 8v14c0 13-8.5 22-20 26C20.500 52 12 43 12 30V16z"/><path d="M24 32l6 6 11-12" stroke-linecap="round"/></svg>
+          <h2 data-i18n="rep.emptyTitle">Rapport d'analyse</h2>
+          <p class="muted" data-i18n="rep.emptyText">Le résultat apparaîtra ici : niveau de risque, type d'arnaque, détails de l'analyse et recommandations.</p>
+        </div>
+        <div class="report-body" id="reportBody" hidden></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="notice" data-i18n="an.disclaimer">Cet outil fournit une aide à la décision basée sur des indicateurs connus. Il ne remplace pas la vigilance : un message jugé « faible risque » n'est pas une garantie. En cas de doute, contactez directement votre opérateur par ses canaux officiels.</div>
+    </div>
+  </section>
+
+  <section class="view" id="view-about" data-view="about" hidden>
+    <div class="container page">
+      <header class="page-head">
+        <p class="eyebrow" data-i18n="about.eyebrow">À propos</p>
+        <h1 data-i18n="about.title">Notre mission : rendre le Mobile Money plus sûr pour tous.</h1>
+        <p class="lead" data-i18n="about.lead">iDetector est un projet de détection de fraude né en Côte d'Ivoire, conçu pour protéger les utilisateurs de services financiers mobiles en Afrique de l'Ouest.</p>
+      </header>
+
+      <div class="grid-3">
+        <article class="card">
+          <h2 data-i18n="about.c1t">Un constat</h2>
+          <p data-i18n="about.c1p">Le Mobile Money a rapproché des millions de personnes des services financiers. Les fraudeurs l'ont aussi compris : faux transferts, faux agents, faux liens de blocage de compte se propagent par SMS, WhatsApp et appels vocaux.</p>
+        </article>
+        <article class="card">
+          <h2 data-i18n="about.c2t">Notre approche</h2>
+          <p data-i18n="about.c2p">Nous combinons des règles d'analyse issues de cas réels, la signalisation communautaire et, à terme, des modèles d'apprentissage automatique entraînés sur des exemples annotés localement, en français et dans le contexte linguistique ouest-africain.</p>
+        </article>
+        <article class="card">
+          <h2 data-i18n="about.c3t">Nos principes</h2>
+          <p data-i18n="about.c3p">Transparence sur ce que l'outil sait et ne sait pas faire, respect de la vie privée dès la conception, gratuité pour le grand public et ouverture aux développeurs et aux opérateurs partenaires.</p>
+        </article>
+      </div>
+
+      <div class="card spaced">
+        <h2 data-i18n="about.covTitle">Services et zones couverts</h2>
+        <div class="chips">
+          <span class="chip">Wave</span><span class="chip">Orange Money</span><span class="chip">MTN MoMo</span><span class="chip">Moov Money</span>
+        </div>
+        <p class="muted" data-i18n="about.covText">Démarrage en Côte d'Ivoire, avec une extension progressive vers le Sénégal, le Mali, le Burkina Faso, le Bénin et le Togo. iDetector est un projet indépendant ; il n'est affilié à aucun opérateur et les noms de services sont cités uniquement pour décrire les arnaques qui les visent.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-faq" data-view="faq" hidden>
+    <div class="container page narrow">
+      <header class="page-head">
+        <p class="eyebrow">FAQ</p>
+        <h1 data-i18n="faq.title">Questions fréquentes sur les arnaques Mobile Money</h1>
+      </header>
+
+      <div class="faq">
+        <details open>
+          <summary data-i18n="faq.q1">Qu'est-ce qu'un « faux transfert » ?</summary>
+          <div data-i18n="faq.a1"><p>Vous recevez un SMS imitant une confirmation de dépôt, puis un appel ou un message vous demande de « renvoyer l'argent envoyé par erreur ». Or aucun dépôt réel n'a eu lieu : en renvoyant la somme, vous perdez votre propre argent. <strong>Vérifiez toujours votre solde depuis l'application officielle ou le code USSD de votre opérateur.</strong></p></div>
+        </details>
+        <details>
+          <summary data-i18n="faq.q2">Comment reconnaître un faux agent ou faux service client ?</summary>
+          <div data-i18n="faq.a2"><p>Il vous contacte sans que vous l'ayez demandé, crée un sentiment d'urgence et réclame votre code secret, un code reçu par SMS (OTP) ou une « vérification » d'identité. <strong>Un véritable agent ne vous demandera jamais votre code secret.</strong> Raccrochez et rappelez le numéro officiel de votre opérateur.</p></div>
+        </details>
+        <details>
+          <summary data-i18n="faq.q3">Que faire si je reçois un lien disant que mon compte est bloqué ?</summary>
+          <div data-i18n="faq.a3"><p>Ne cliquez pas. Les opérateurs ne rétablissent pas un compte via un lien reçu par SMS. Ouvrez l'application officielle ou contactez le service client par ses canaux officiels. Les adresses qui imitent un nom connu (ex. avec des tirets ou des extensions inhabituelles) sont un signal d'alerte majeur.</p></div>
+        </details>
+        <details>
+          <summary data-i18n="faq.q4">J'ai déjà communiqué mon code ou envoyé de l'argent. Que faire ?</summary>
+          <div data-i18n="faq.a4"><ol><li>Contactez immédiatement votre opérateur pour bloquer le compte et signaler la transaction.</li><li>Changez votre code secret depuis un canal officiel.</li><li>Conservez les captures d'écran, numéros et horodatages.</li><li>Déposez plainte auprès des autorités compétentes de votre pays (en Côte d'Ivoire : la plateforme de lutte contre la cybercriminalité de la Police nationale).</li></ol></div>
+        </details>
+        <details>
+          <summary data-i18n="faq.q5">iDetector peut-il se tromper ?</summary>
+          <div data-i18n="faq.a5"><p>Oui. L'analyse repose sur des indicateurs et ne peut pas tout détecter, notamment les arnaques très récentes ou les conversations sans lien ni mot-clé évident. Un faux positif est possible, et un message jugé peu risqué n'est pas une garantie de sécurité.</p></div>
+        </details>
+        <details>
+          <summary data-i18n="faq.q6">Mes messages sont-ils conservés ?</summary>
+          <div data-i18n="faq.a6"><p>Non. Le texte analysé est transmis à notre serveur, puis à un fournisseur d'IA, mais son contenu n'est pas conservé : seules des statistiques sans contenu (date, type d'arnaque, niveau de risque, indice de confiance) sont enregistrées. Un message n'est conservé que si vous choisissez de le signaler via la page « Contribuer ».</p></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-contribute" data-view="contribute" hidden>
+    <div class="container page">
+      <header class="page-head">
+        <p class="eyebrow" data-i18n="contrib.eyebrow">Communauté</p>
+        <h1 data-i18n="contrib.title">Signalez une arnaque, protégez les autres.</h1>
+        <p class="lead" data-i18n="contrib.lead">Chaque signalement aide à repérer de nouveaux schémas de fraude et à améliorer la détection pour tout le monde.</p>
+      </header>
+
+      <div class="contrib-grid">
+        <form class="card" id="reportForm" novalidate>
+          <div class="form-row">
+            <div>
+              <label class="field-label" for="cType" data-i18n="contrib.type">Type d'arnaque</label>
+              <select id="cType" required>
+                <option value="faux_transfert" data-i18n="ty.transfer">Faux transfert / renvoi d'argent</option>
+                <option value="faux_agent" data-i18n="ty.agent">Faux agent / service client</option>
+                <option value="faux_blocage" data-i18n="ty.block">Faux blocage de compte / lien</option>
+                <option value="faux_gain" data-i18n="ty.lottery">Fausse loterie / gain</option>
+                <option value="vol_pin" data-i18n="ty.pin">Demande de code secret ou OTP</option>
+                <option value="autre" data-i18n="ty.other">Autre</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="cChannel" data-i18n="contrib.channel">Canal reçu</label>
+              <select id="cChannel">
+                <option value="sms">SMS</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="appel" data-i18n="contrib.call">Appel vocal</option>
+                <option value="autre" data-i18n="ty.other">Autre</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label class="field-label" for="cOperator" data-i18n="contrib.operator">Service imité</label>
+              <select id="cOperator">
+                <option value="wave">Wave</option>
+                <option value="orange">Orange Money</option>
+                <option value="mtn">MTN MoMo</option>
+                <option value="moov">Moov Money</option>
+                <option value="autre" data-i18n="ty.other">Autre</option>
+              </select>
+            </div>
+            <div>
+              <label class="field-label" for="cCountry" data-i18n="contrib.country">Pays</label>
+              <select id="cCountry">
+                <option value="CI" data-i18n="co.ci">Côte d'Ivoire</option>
+                <option value="SN" data-i18n="co.sn">Sénégal</option>
+                <option value="ML" data-i18n="co.ml">Mali</option>
+                <option value="BF" data-i18n="co.bf">Burkina Faso</option>
+                <option value="BJ" data-i18n="co.bj">Bénin</option>
+                <option value="TG" data-i18n="co.tg">Togo</option>
+                <option value="XX" data-i18n="ty.other">Autre</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="field-label" for="cText" data-i18n="contrib.text">Contenu du message (sans vos données personnelles)</label>
+          <textarea id="cText" rows="6" maxlength="2000" required></textarea>
+
+          <label class="field-label" for="cSender" data-i18n="contrib.sender">Numéro ou lien de l'expéditeur (facultatif)</label>
+          <input type="text" id="cSender" maxlength="200" autocomplete="off">
+
+          <label class="check">
+            <input type="checkbox" id="cConsent" required>
+            <span data-i18n="contrib.consent">Je confirme que ce message ne contient ni mon code secret, ni mes données personnelles, et j'autorise son utilisation pour améliorer la détection.</span>
+          </label>
+
+          <p class="form-error" id="formError" role="alert" hidden></p>
+          <button type="submit" class="btn btn-primary" data-i18n="contrib.submit">Envoyer le signalement</button>
+          <p class="form-success" id="formSuccess" role="status" hidden></p>
+        </form>
+
+        <aside class="card">
+          <h2 data-i18n="contrib.howTitle">Comment bien signaler</h2>
+          <ol class="steps">
+            <li data-i18n="contrib.s1">Copiez le texte exact du message reçu.</li>
+            <li data-i18n="contrib.s2">Masquez tout élément personnel : votre nom, votre numéro, votre solde.</li>
+            <li data-i18n="contrib.s3">Indiquez le canal, le service imité et le numéro ou le lien de l'expéditeur.</li>
+            <li data-i18n="contrib.s4">Ne cliquez jamais sur le lien et ne rappelez pas l'expéditeur.</li>
+          </ol>
+          <div class="notice small" data-i18n="contrib.warn">Vous avez déjà perdu de l'argent ? Contactez d'abord votre opérateur et les autorités ; ce formulaire ne permet pas de récupérer des fonds.</div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-api" data-view="api" hidden>
+    <div class="container page">
+      <header class="page-head">
+        <p class="eyebrow" data-i18n="api.eyebrow">Développeurs</p>
+        <h1 data-i18n="api.title">Documentation de l'API iDetector</h1>
+        <p class="lead" data-i18n="api.lead">Intégrez l'analyse anti-arnaque dans votre application, votre bot WhatsApp ou le back-office de votre service. Cette page décrit l'API REST utilisée par le site.</p>
+      </header>
+
+      <div class="notice" data-i18n="api.status">Cette API est celle qui alimente l'analyseur de ce site. Remplacez l'adresse de base par celle de votre déploiement.</div>
+
+      <div class="card spaced">
+        <h2 data-i18n="api.baseT">URL de base et accès</h2>
+        <pre><code>Base URL : https://VOTRE-DOMAINE/api
+Auth     : aucune pour l'analyse (limitée par adresse IP)
+Format   : application/json (UTF-8)</code></pre>
+      </div>
+
+      <div class="card spaced">
+        <div class="endpoint"><span class="verb post">POST</span><code>/analyze</code></div>
+        <p data-i18n="api.analyzeP">Analyse un message (texte et/ou capture d'écran) et renvoie le niveau de risque, le type d'arnaque, une analyse et une recommandation.</p>
+        <h3 data-i18n="api.reqT">Requête</h3>
+        <pre><code>curl -X POST https://VOTRE-DOMAINE/api/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Votre compte est bloqué. Cliquez sur http://wave-verif.xyz",
+    "lang": "fr"
+  }'</code></pre>
+        <table class="table">
+          <thead><tr><th>Champ</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>text</code></td><td>string</td><td data-i18n="api.f1">Message à analyser (2 000 caractères max). Obligatoire si aucune image n'est envoyée.</td></tr>
+            <tr><td><code>lang</code></td><td>string</td><td data-i18n="api.f2">« fr » ou « en ». Langue des explications renvoyées. Défaut : « fr ».</td></tr>
+            <tr><td><code>image</code></td><td>fichier</td><td data-i18n="api.f3">Capture d'écran PNG, JPG ou WebP (8 Mo max). Uniquement en multipart/form-data, seule ou avec « text ».</td></tr>
+          </tbody>
+        </table>
+        <h3 data-i18n="api.resT">Réponse 200</h3>
+        <pre><code>{
+  "analysisId": 1288,
+  "riskLevel": "Élevé",
+  "scamType": "Faux message de blocage de compte (Wave)",
+  "confidenceScore": 92,
+  "analysis": "Le lien imite le nom d'un service connu et le message menace de bloquer le compte.",
+  "recommendation": "Ne cliquez pas. Contactez votre opérateur par un canal officiel."
+}</code></pre>
+        <p class="muted small"><code>riskLevel</code> : <code>Faible</code> · <code>Moyen</code> · <code>Élevé</code> &nbsp;|&nbsp; <code>confidenceScore</code> : 0 – 100</p>
+      </div>
+
+      <div class="card spaced">
+        <div class="endpoint"><span class="verb post">POST</span><code>/reports</code></div>
+        <p data-i18n="api.reportsP">Soumet un signalement communautaire, placé en attente de validation par un modérateur.</p>
+        <pre><code>{
+  "scam_type": "faux_transfert",
+  "channel": "whatsapp",
+  "operator": "wave",
+  "country": "CI",
+  "text": "…",
+  "sender": "+225…"
+}</code></pre>
+        <div class="endpoint"><span class="verb get">GET</span><code>/health</code></div>
+        <p data-i18n="api.healthP">Vérifie la disponibilité du service et l'éventuel mode maintenance.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-privacy" data-view="privacy" hidden>
+    <div class="container page narrow">
+      <header class="page-head">
+        <p class="eyebrow" data-i18n="priv.eyebrow">Mentions légales</p>
+        <h1 data-i18n="priv.title">Politique de confidentialité et droits d'auteur</h1>
+        <p class="muted" data-i18n="priv.updated">Dernière mise à jour : 20 octobre 2026</p>
+      </header>
+
+      <div class="legal" data-i18n="priv.body">
+        <h2>1. Données traitées</h2>
+        <p>Le texte que vous soumettez à l'analyseur est envoyé à notre serveur, puis à un fournisseur d'intelligence artificielle (le service d'IA configuré par iDetector) uniquement pour produire l'analyse. Le contenu du message n'est pas conservé : nous enregistrons seulement des données statistiques (date, type d'arnaque, niveau de risque, indice de confiance, durée de traitement). Les captures d'écran sont lues dans votre navigateur (OCR) : l'image n'est pas envoyée, seul le texte extrait l'est. Si l'IA est indisponible, une analyse locale simplifiée est effectuée dans votre navigateur. Ne saisissez jamais de code secret, mot de passe ni donnée personnelle.</p>
+        <h2>2. Signalements communautaires</h2>
+        <p>Si vous utilisez la page « Contribuer », les informations que vous renseignez (type d'arnaque, contenu du message, numéro ou lien de l'expéditeur) sont utilisées uniquement pour améliorer la détection des fraudes. N'y incluez jamais de code secret, de mot de passe ni de données personnelles.</p>
+        <h2>3. Stockage local</h2>
+        <p>Votre préférence de langue peut être enregistrée dans le stockage local de votre navigateur. Vous pouvez la supprimer à tout moment depuis les réglages de votre navigateur.</p>
+        <h2>4. Cookies et traceurs</h2>
+        <p>iDetector n'utilise aucun cookie publicitaire ni traceur de profilage.</p>
+        <h2>5. Vos droits</h2>
+        <p>Conformément à la législation applicable en matière de protection des données personnelles (notamment la loi ivoirienne n° 2013-450 et les textes équivalents des pays concernés), vous disposez d'un droit d'accès, de rectification et de suppression. Écrivez-nous à l'adresse de support indiquée en bas de page.</p>
+        <h2>6. Limitation de responsabilité</h2>
+        <p>Les résultats de l'analyse sont fournis à titre indicatif. iDetector ne peut être tenu responsable des décisions prises sur leur seule base.</p>
+        <h2>7. Droits d'auteur</h2>
+        <p>© 2026 iDetector. Tous droits réservés. Le contenu, le design et le code de ce site sont protégés. Les noms de services tiers (Wave, Orange Money, MTN MoMo, Moov Money) appartiennent à leurs propriétaires respectifs et sont cités à titre purement descriptif ; iDetector n'est affilié à aucun d'entre eux.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer" id="contact">
+  <div class="container footer-grid">
+    <div>
+      <a class="brand brand-light" href="#home" aria-label="iDetector">
+        <img class="brand-mark" src="logo.png" alt="" width="44" height="40">
+        <span class="brand-name">i<strong>Detector</strong></span>
+      </a>
+      <p class="footer-text" data-i18n="foot.tag">Détection des arnaques Mobile Money en Afrique de l'Ouest.</p>
+    </div>
+    <div>
+      <h2 class="footer-title" data-i18n="foot.nav">Navigation</h2>
+      <ul class="footer-links">
+        <li><a href="#home" data-i18n="nav.home">Analyseur</a></li>
+        <li><a href="#about" data-i18n="nav.about">À propos</a></li>
+        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#contribute" data-i18n="nav.contribute">Contribuer</a></li>
+        <li><a href="#api" data-i18n="nav.api">API</a></li>
+        <li><a href="#privacy" data-i18n="nav.privacy">Confidentialité</a></li>
+      </ul>
+    </div>
+    <div>
+      <h2 class="footer-title" data-i18n="foot.contact">Contact</h2>
+      <p class="footer-text"><a href="mailto:supportidetectorai@gmail.com" data-link="email" data-link-text="email">supportidetectorai@gmail.com</a></p>
+      <div class="socials">
+        <a href="https://www.linkedin.com/company/idetector_ai" data-link="linkedin" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 11-.02 5 2.5 2.5 0 01.02-5zM3 9.75h4v11.5H3zM9.75 9.75h3.83v1.57h.06c.53-1 1.84-2.07 3.78-2.07 4.04 0 4.78 2.66 4.78 6.12v5.88h-4v-5.2c0-1.24-.02-2.84-1.73-2.84-1.73 0-2 1.35-2 2.75v5.29h-4z"/></svg>
+        </a>
+        <a href="https://x.com/idetector_ai" data-link="twitter" target="_blank" rel="noopener noreferrer" aria-label="Twitter / X">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.53 3H20.5l-6.5 7.43L21.5 21h-5.9l-4.6-6.02L5.7 21H2.72l6.95-7.95L2.5 3h6.05l4.17 5.5zm-1.04 16.2h1.65L7.58 4.7H5.8z"/></svg>
+        </a>
+        <a href="mailto:supportidetectorai@gmail.com" data-link="email" aria-label="Email">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span data-i18n="foot.copy">© 2026 iDetector. Tous droits réservés.</span>
+    <a href="#privacy" data-i18n="nav.privacy">Confidentialité</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
